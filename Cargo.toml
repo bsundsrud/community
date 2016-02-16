@@ -1,0 +1,6 @@
+[package]
+name = "community"
+version = "0.1.0"
+authors = ["bsundsrud <benn.sundsrud@gmail.com>"]
+
+[dependencies]
