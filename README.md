@@ -3,6 +3,7 @@
 Community helps find social services and programs that a user qualifies for.
 
 ## Roadmap
+- [ ] Better name
 
 - [ ] Constraint-checking system that matches a user's info against stored organizations/programs
     - [x] Rudimentary rule-checking support
