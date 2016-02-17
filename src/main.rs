@@ -35,7 +35,7 @@ fn main() {
 
 
 
-    let mut chk = Checklist::new("My Checklist");
+    let mut chk = Checklist::new();
     chk.add_or_requirements(r, r1);
     chk.add_requirement(r2);
 

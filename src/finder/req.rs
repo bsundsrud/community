@@ -32,6 +32,54 @@ pub struct Req {
     pub req_type: Type,
 }
 
+fn check_int_range(val: &Option<u32>, start: u32, end: u32) -> Status {
+    if let Some(x) = *val {
+        if x >= start && x <= end {
+            Status::Met
+        } else {
+            Status::NotMet
+        }
+    } else {
+        Status::Unknown
+    }
+}
+
+fn check_int_equals(val: &Option<u32>, other: u32) -> Status {
+    if let Some(i) = *val {
+        if other == i {
+            Status::Met
+        } else {
+            Status::NotMet
+        }
+    } else {
+        Status::Unknown
+    }
+}
+
+fn check_boolean(val: &Option<bool>, other: bool) -> Status {
+    if let Some(b) = *val {
+        if other == b {
+            Status::Met
+        } else {
+            Status::NotMet
+        }
+    } else {
+        Status::Unknown
+    }
+}
+
+fn check_string_equals(val: &Option<String>, other: &str) -> Status {
+    if let Some(ref s) = *val {
+        if other == s {
+            Status::Met
+        } else {
+            Status::NotMet
+        }
+    } else {
+        Status::Unknown
+    }
+}
+
 impl Req {
     pub fn new(name: &str, field: Field, req_type: Type) -> Req {
         Req {
@@ -42,23 +90,38 @@ impl Req {
     }
 
     pub fn check(&self, info: &UserInfo) -> Status {
-        fields!(self,
-            Field::Age => requirements!(self,
-                Type::IntRange(start, end) => int_range!(info.age, start, end)
-            ),
-            Field::County => requirements!(self,
-                Type::StringEquals(ref s) => string_equals!(info.county, s)
-            ),
-            Field::ChildrenCount => requirements!(self,
-                Type::IntEquals(i) => int_equals!(info.child_count, i),
-                Type::IntRange(start, end) => int_range!(info.child_count, start, end)
-            ),
-            Field::Income => requirements!(self,
-                Type::IntRange(start, end) => int_range!(info.annual_income, start, end)
-            ),
-            Field::SingleParent => requirements!(self,
-                Type::Boolean(b) => boolean!(info.single_parent, b)
-            )
-        )
+        match self.field {
+            Field::Age => {
+                match self.req_type {
+                    Type::IntRange(start, end) => check_int_range(&info.age, start, end),
+                    _ => unimplemented!(),
+                }
+            }
+            Field::County => {
+                match self.req_type {
+                    Type::StringEquals(ref s) => check_string_equals(&info.county, s),
+                    _ => unimplemented!(),
+                }
+            }
+            Field::ChildrenCount => {
+                match self.req_type {
+                    Type::IntEquals(i) => check_int_equals(&info.child_count, i),
+                    Type::IntRange(start, end) => check_int_range(&info.child_count, start, end),
+                    _ => unimplemented!(),
+                }
+            }
+            Field::Income => {
+                match self.req_type {
+                    Type::IntRange(start, end) => check_int_range(&info.annual_income, start, end),
+                    _ => unimplemented!(),
+                }
+            }
+            Field::SingleParent => {
+                match self.req_type {
+                    Type::Boolean(b) => check_boolean(&info.single_parent, b),
+                    _ => unimplemented!(),
+                }
+            }
+        }
     }
 }

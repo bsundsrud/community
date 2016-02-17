@@ -3,7 +3,6 @@ use user::UserInfo;
 
 #[derive(Debug)]
 pub struct Checklist {
-    pub name: String,
     requirements: Vec<ChecklistType>,
 }
 #[derive(Debug)]
@@ -68,11 +67,8 @@ impl ChecklistResult {
 }
 
 impl Checklist {
-    pub fn new(name: &str) -> Checklist {
-        Checklist {
-            name: String::from(name),
-            requirements: Vec::new(),
-        }
+    pub fn new() -> Checklist {
+        Checklist { requirements: Vec::new() }
     }
     pub fn add_requirement(&mut self, req: Req) {
         self.add_checklist(ChecklistType::Requirement(req));
