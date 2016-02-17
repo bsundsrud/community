@@ -20,28 +20,28 @@ impl UserInfo {
             single_parent: None,
         }
     }
-    pub fn set_age<'a>(&'a mut self, age: u32) -> &'a mut Self {
+    pub fn set_age(&mut self, age: u32) -> &Self {
         self.age = Some(age);
         self
     }
 
-    pub fn set_county<'a>(&'a mut self, county: &str) -> &'a mut Self {
+    pub fn set_county(&mut self, county: &str) -> &Self {
         self.county = Some(county.to_string());
         self
     }
 
     // TODO: should probably just be updated by changing the child_info field
-    pub fn set_child_count<'a>(&'a mut self, count: u32) -> &'a mut Self {
+    pub fn set_child_count(&mut self, count: u32) -> &Self {
         self.child_count = Some(count);
         self
     }
 
-    pub fn set_annual_income<'a>(&'a mut self, income: u32) -> &'a mut Self {
+    pub fn set_annual_income(&mut self, income: u32) -> &Self {
         self.annual_income = Some(income);
         self
     }
 
-    pub fn set_single_parent<'a>(&'a mut self, value: bool) -> &'a mut Self {
+    pub fn set_single_parent(&mut self, value: bool) -> &Self {
         self.single_parent = Some(value);
         self
     }

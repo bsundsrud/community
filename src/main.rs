@@ -1,9 +1,7 @@
-
-mod user;
-mod finder;
-use user::UserInfo;
-use finder::req::{Req, Field, Type};
-use finder::checklist::{Checklist};
+extern crate community;
+use community::user::UserInfo;
+use community::finder::req::{Req, Field, Type};
+use community::finder::checklist::Checklist;
 
 fn main() {
     let info = UserInfo {
@@ -15,23 +13,15 @@ fn main() {
         single_parent: Some(true),
     };
 
-    let r = Req::new(
-        "age range",
-        Field::Age,
-        Type::IntRange(10, 30)
-    );
+    let r = Req::new("age range", Field::Age, Type::IntRange(10, 30));
 
-    let r1 = Req::new(
-        "has 1-3 children",
-        Field::ChildrenCount,
-        Type::IntRange(1, 3)
-    );
+    let r1 = Req::new("has 1-3 children",
+                      Field::ChildrenCount,
+                      Type::IntRange(1, 3));
 
-    let r2 = Req::new(
-        "in Dakota county",
-        Field::County,
-        Type::StringEquals(String::from("Dakota"))
-    );
+    let r2 = Req::new("in Dakota county",
+                      Field::County,
+                      Type::StringEquals(String::from("Dakota")));
 
 
 

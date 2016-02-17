@@ -3,4 +3,19 @@ name = "community"
 version = "0.1.0"
 authors = ["bsundsrud <benn.sundsrud@gmail.com>"]
 
+[lib]
+name = "community"
+path = "lib/lib.rs"
+test = false
+bench = false
+
+[[bin]]
+name = "community"
+path = "src/main.rs"
+
+[[test]]
+name = "test"
+path = "tests/test.rs"
+
+
 [dependencies]
