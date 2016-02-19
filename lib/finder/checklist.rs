@@ -7,61 +7,74 @@ pub struct Checklist {
 }
 #[derive(Debug)]
 pub enum ChecklistType {
-    Or(Box<ChecklistType>, Box<ChecklistType>),
+    Or(Vec<ChecklistType>),
     Requirement(Req),
+    And(Vec<ChecklistType>),
 }
 
 impl ChecklistType {
-    pub fn check(&self, info: &UserInfo) -> ChecklistResult {
+    pub fn check(&self, info: &UserInfo) -> GroupedResult {
         match *self {
-            ChecklistType::Or(ref req1, ref req2) => {
-                let status1 = req1.check(info);
-                let status2 = req2.check(info);
-                ChecklistResult::Or(Box::new(status1), Box::new(status2))
-            }
             ChecklistType::Requirement(ref req) => {
                 let status = req.check(info);
-                ChecklistResult::Requirement(Result::new(req.name.clone(), status))
+                GroupedResult::Requirement(ChecklistStatus::new(req.name.clone(), status))
             }
+            ChecklistType::Or(ref v) => {
+                GroupedResult::Or(v.iter().map(|r| r.check(info)).collect())
+            }
+            ChecklistType::And(ref v) => {
+                GroupedResult::And(v.iter().map(|r| r.check(info)).collect())
+            }
+
         }
     }
 }
 
 #[derive(Debug)]
-pub struct Result {
+pub struct ChecklistStatus {
     pub name: String,
     pub status: Status,
 }
 
-impl Result {
-    fn new(name: String, status: Status) -> Result {
-        Result {
+impl ChecklistStatus {
+    fn new(name: String, status: Status) -> ChecklistStatus {
+        ChecklistStatus {
             name: name,
             status: status,
         }
     }
 }
 #[derive(Debug)]
-pub enum ChecklistResult {
-    Or(Box<ChecklistResult>, Box<ChecklistResult>),
-    Requirement(Result),
+pub enum GroupedResult {
+    Or(Vec<GroupedResult>),
+    Requirement(ChecklistStatus),
+    And(Vec<GroupedResult>),
 }
 
-impl ChecklistResult {
+impl GroupedResult {
     pub fn status(&self) -> Status {
         match *self {
-            ChecklistResult::Or(ref res1, ref res2) => {
-                let s1 = res1.status();
-                let s2 = res2.status();
-                if s1 == Status::Met || s2 == Status::Met {
-                    Status::Met
-                } else if s1 == Status::Unknown || s2 == Status::Unknown {
-                    Status::Unknown
-                } else {
-                    Status::NotMet
-                }
+            GroupedResult::Requirement(ref req) => req.status,
+            GroupedResult::Or(ref v) => {
+                v.iter().fold(Status::NotMet, |current_status, r| {
+                    match r.status() {
+                        Status::Met => Status::Met,
+                        Status::Unknown if current_status != Status::Met => Status::Unknown,
+                        _ => current_status,
+                    }
+                })
             }
-            ChecklistResult::Requirement(ref req) => req.status,
+            GroupedResult::And(ref v) => {
+                v.iter().fold(Status::Met, |current_status, r| {
+                    match (r.status(), current_status) {
+                        (Status::NotMet, _) => Status::NotMet,
+                        (_, Status::NotMet) => Status::NotMet,
+                        (Status::Unknown, _) => Status::Unknown,
+                        (_, Status::Unknown) => Status::Unknown,
+                        (Status::Met, Status::Met) => Status::Met,
+                    }
+                })
+            }
         }
     }
 }
@@ -78,12 +91,19 @@ impl Checklist {
         self.requirements.push(chk);
     }
 
-    pub fn add_or_requirements(&mut self, req1: Req, req2: Req) {
-        self.add_checklist(ChecklistType::Or(Box::new(ChecklistType::Requirement(req1)),
-                                             Box::new(ChecklistType::Requirement(req2))));
+    pub fn add_or_requirements(&mut self, v: Vec<Req>) {
+        self.add_checklist(ChecklistType::Or(v.into_iter()
+                                              .map(|r| ChecklistType::Requirement(r))
+                                              .collect()));
     }
 
-    pub fn check(&self, info: &UserInfo) -> Vec<ChecklistResult> {
+    pub fn add_and_requirements(&mut self, v: Vec<Req>) {
+        self.add_checklist(ChecklistType::And(v.into_iter()
+                                               .map(|r| ChecklistType::Requirement(r))
+                                               .collect()));
+    }
+
+    pub fn check(&self, info: &UserInfo) -> Vec<GroupedResult> {
         let mut results = Vec::new();
         for c in self.requirements.iter() {
             results.push(c.check(info));
