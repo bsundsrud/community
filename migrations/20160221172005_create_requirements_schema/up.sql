@@ -26,7 +26,7 @@ CREATE TYPE checklist_type AS ENUM ('or', 'and', 'req');
 
 CREATE TABLE checklists (
     id SERIAL PRIMARY KEY,
-    program_id INTEGER REFERENCES programs(id),
+    program_id INTEGER REFERENCES programs(id) NOT NULL,
     check_type checklist_type NOT NULL,
     checklist_id INTEGER REFERENCES checklists(id),
     requirements_id INTEGER REFERENCES requirements(id)
