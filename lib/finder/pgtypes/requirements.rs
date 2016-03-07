@@ -1,7 +1,7 @@
 use postgres::types::{ToSql, FromSql, Type, SessionInfo, IsNull};
 use postgres::error::Error;
 use postgres::Result;
-use super::super::req;
+use finder::requirements;
 use std::io::{Write, Read};
 
 #[derive(Debug, PartialEq, Eq)]
@@ -37,7 +37,7 @@ impl ToSql for RequirementType {
 }
 
 impl FromSql for RequirementType {
-    fn from_sql<R: Read>(ty: &Type, raw: &mut R, ctx: &SessionInfo) -> Result<Self> {
+    fn from_sql<R: Read>(_ty: &Type, raw: &mut R, _ctx: &SessionInfo) -> Result<Self> {
         let mut buf = vec![];
         try!(raw.read_to_end(&mut buf));
 
@@ -95,7 +95,7 @@ impl ToSql for FieldType {
 
 
 impl FromSql for FieldType {
-    fn from_sql<R: Read>(ty: &Type, raw: &mut R, ctx: &SessionInfo) -> Result<Self> {
+    fn from_sql<R: Read>(_ty: &Type, raw: &mut R, _ctx: &SessionInfo) -> Result<Self> {
         let mut buf = vec![];
         try!(raw.read_to_end(&mut buf));
 
@@ -114,74 +114,26 @@ impl FromSql for FieldType {
     }
 }
 
-impl From<FieldType> for req::Field {
-    fn from(pgtype: FieldType) -> req::Field {
+impl From<FieldType> for requirements::Field {
+    fn from(pgtype: FieldType) -> requirements::Field {
         match pgtype {
-            FieldType::Age => req::Field::Age,
-            FieldType::County => req::Field::County,
-            FieldType::ChildrenCount => req::Field::ChildrenCount,
-            FieldType::Income => req::Field::Income,
-            FieldType::SingleParent => req::Field::SingleParent,
+            FieldType::Age => requirements::Field::Age,
+            FieldType::County => requirements::Field::County,
+            FieldType::ChildrenCount => requirements::Field::ChildrenCount,
+            FieldType::Income => requirements::Field::Income,
+            FieldType::SingleParent => requirements::Field::SingleParent,
         }
     }
 }
 
-impl<'a> From<&'a FieldType> for req::Field {
-    fn from(pgtype: &FieldType) -> req::Field {
+impl<'a> From<&'a FieldType> for requirements::Field {
+    fn from(pgtype: &FieldType) -> requirements::Field {
         match pgtype {
-            &FieldType::Age => req::Field::Age,
-            &FieldType::County => req::Field::County,
-            &FieldType::ChildrenCount => req::Field::ChildrenCount,
-            &FieldType::Income => req::Field::Income,
-            &FieldType::SingleParent => req::Field::SingleParent,
+            &FieldType::Age => requirements::Field::Age,
+            &FieldType::County => requirements::Field::County,
+            &FieldType::ChildrenCount => requirements::Field::ChildrenCount,
+            &FieldType::Income => requirements::Field::Income,
+            &FieldType::SingleParent => requirements::Field::SingleParent,
         }
     }
-}
-
-#[derive(Debug, PartialEq, Eq)]
-pub enum ChecklistType {
-    Or,
-    And,
-    Req,
-}
-
-impl FromSql for ChecklistType {
-    fn from_sql<R: Read>(ty: &Type, raw: &mut R, ctx: &SessionInfo) -> Result<Self> {
-        let mut buf = vec![];
-        try!(raw.read_to_end(&mut buf));
-
-        match &*buf {
-            b"or" => Ok(ChecklistType::Or),
-            b"and" => Ok(ChecklistType::And),
-            b"req" => Ok(ChecklistType::Req),
-            _ => Err(Error::Conversion("unknown `checklist_type` variant".into())),
-        }
-    }
-
-    fn accepts(ty: &Type) -> bool {
-        ty.name() == "checklist_type"
-    }
-}
-
-impl ToSql for ChecklistType {
-    fn to_sql<W: Write + ?Sized>(&self,
-                                 _: &Type,
-                                 mut w: &mut W,
-                                 _: &SessionInfo)
-                                 -> Result<IsNull> {
-        let name = match *self {
-            ChecklistType::Or => "or",
-            ChecklistType::And => "and",
-            ChecklistType::Req => "req",
-        };
-        try!(w.write_all(name.as_bytes()));
-        try!(w.write(&[0])); // I think the strings are null terminated but can't remember for sure
-        Ok(IsNull::No)
-    }
-
-    fn accepts(ty: &Type) -> bool {
-        ty.name() == "checklist_type"
-    }
-
-    to_sql_checked!();
 }

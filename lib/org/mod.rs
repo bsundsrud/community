@@ -1,4 +1,4 @@
-use finder::checklist::Checklist;
+use finder::checklists::ChecklistModel;
 
 pub struct Org {
     pub name: String,
@@ -9,5 +9,5 @@ pub struct Org {
 pub struct Program {
     pub name: String,
     pub description: String,
-    pub requirements: Checklist,
+    pub requirements: Vec<ChecklistModel>,
 }

@@ -1,9 +1,9 @@
-use community::finder::req::{Req, Field, Type, Status};
+use community::finder::requirements::{RequirementModel, Field, Type, Status};
 use community::user::UserInfo;
 
 #[test]
 fn test_age_field() {
-    let r1 = Req::new("", Field::Age, Type::IntRange(5, 10));
+    let r1 = RequirementModel::new(1, "", Field::Age, Type::IntRange(5, 10));
     let mut info = UserInfo::new();
 
     info.set_age(10);
@@ -25,7 +25,10 @@ fn test_age_field() {
 
 #[test]
 fn test_county_field() {
-    let r1 = Req::new("", Field::County, Type::StringEquals("TestVal".to_string()));
+    let r1 = RequirementModel::new(1,
+                                   "",
+                                   Field::County,
+                                   Type::StringEquals("TestVal".to_string()));
     let mut info = UserInfo::new();
     assert_eq!(Status::Unknown, r1.check(&info));
 
@@ -39,8 +42,8 @@ fn test_county_field() {
 
 #[test]
 fn test_child_count_field() {
-    let r1 = Req::new("", Field::ChildrenCount, Type::IntEquals(0));
-    let r2 = Req::new("", Field::ChildrenCount, Type::IntRange(1, 3));
+    let r1 = RequirementModel::new(1, "", Field::ChildrenCount, Type::IntEquals(0));
+    let r2 = RequirementModel::new(1, "", Field::ChildrenCount, Type::IntRange(1, 3));
 
     let mut info = UserInfo::new();
     assert_eq!(Status::Unknown, r1.check(&info));
@@ -57,7 +60,7 @@ fn test_child_count_field() {
 
 #[test]
 fn test_income_field() {
-    let r1 = Req::new("", Field::Income, Type::IntRange(10_000, 20_000));
+    let r1 = RequirementModel::new(1, "", Field::Income, Type::IntRange(10_000, 20_000));
     let mut info = UserInfo::new();
 
     assert_eq!(Status::Unknown, r1.check(&info));
@@ -74,7 +77,7 @@ fn test_income_field() {
 
 #[test]
 fn test_single_parent() {
-    let r1 = Req::new("", Field::SingleParent, Type::Boolean(true));
+    let r1 = RequirementModel::new(1, "", Field::SingleParent, Type::Boolean(true));
     let mut info = UserInfo::new();
 
     assert_eq!(Status::Unknown, r1.check(&info));
