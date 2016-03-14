@@ -19,7 +19,14 @@ path = "tests/test.rs"
 
 
 [dependencies]
+r2d2 = "*"
+r2d2_postgres = "*"
 postgres = "0.11"
 postgres_array = "0.6.1"
 dotenv = "0.8.0"
 pgx = { git = "https://github.com/bsundsrud/rust-pgx/" }
+iron = "0.2.6"
+persistent = "0.0.6"
+router = "*"
+mount = "*"
+rustc-serialize = "*"
