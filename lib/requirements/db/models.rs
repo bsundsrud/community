@@ -6,7 +6,7 @@ use postgres::error::Error;
 use postgres_array::Array;
 use std::str::FromStr;
 use user::UserInfo;
-use finder::pgtypes::requirements::{FieldType, RequirementType};
+use pgtypes::requirements::{FieldType, RequirementType};
 
 #[derive(Debug)]
 pub struct RequirementModel {

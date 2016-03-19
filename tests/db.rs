@@ -1,2 +1,2 @@
 use community::models::establish_connection;
-use community::finder::{checklists, requirements};
+use community::{checklists, requirements};

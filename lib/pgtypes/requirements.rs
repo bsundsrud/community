@@ -1,7 +1,7 @@
 use postgres::types::{ToSql, FromSql, Type, SessionInfo, IsNull};
 use postgres::error::Error;
 use postgres::Result;
-use finder::requirements;
+use requirements;
 use std::io::{Write, Read};
 
 #[derive(Debug, PartialEq, Eq)]

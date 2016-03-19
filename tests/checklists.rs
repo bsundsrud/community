@@ -1,6 +1,6 @@
-use community::finder::requirements::{RequirementModel, Field, Type, Status};
+use community::requirements::{RequirementModel, Field, Type, Status};
 use community::user::UserInfo;
-use community::finder::checklists::{ChecklistModel, ChecklistHierarchy};
+use community::checklists::{ChecklistModel, ChecklistHierarchy};
 
 
 fn fake_checklist(req: RequirementModel) -> ChecklistModel {
@@ -97,7 +97,7 @@ fn test_simple_and_checklist_type() {
 
 #[test]
 fn test_nested_checklist_types() {
-    use community::finder::checklists::ChecklistHierarchy::*;
+    use community::checklists::ChecklistHierarchy::*;
     let r1 = RequirementModel::new(1, "", Field::Age, Type::IntRange(15, 30));
     let r2 = RequirementModel::new(1, "", Field::SingleParent, Type::Boolean(false));
     let r3 = RequirementModel::new(1, "", Field::SingleParent, Type::Boolean(true));

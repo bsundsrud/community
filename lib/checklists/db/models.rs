@@ -1,6 +1,6 @@
-use finder::pgtypes::checklists::ChecklistType as DbChecklistType;
-use finder::pgtypes::requirements::{RequirementType, FieldType};
-use finder::requirements::{Field, Type, RequirementModel};
+use pgtypes::checklists::ChecklistType as DbChecklistType;
+use pgtypes::requirements::{RequirementType, FieldType};
+use requirements::{Field, Type, RequirementModel};
 use super::super::types::{GroupedResult, ChecklistStatus};
 use user::UserInfo;
 use pgx::{FromRow, queryx};

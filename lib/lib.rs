@@ -1,4 +1,6 @@
 #![feature(custom_derive)]
+#[macro_use]
+extern crate log;
 extern crate dotenv;
 extern crate r2d2;
 extern crate r2d2_postgres;
@@ -7,7 +9,9 @@ extern crate postgres;
 extern crate postgres_array;
 #[macro_use]
 extern crate pgx;
+#[macro_use]
 extern crate iron;
+extern crate logger as iron_logger;
 extern crate persistent;
 extern crate mount;
 extern crate router;
@@ -15,6 +19,9 @@ extern crate rustc_serialize;
 
 pub mod user;
 pub mod org;
-pub mod finder;
-pub mod models;
+pub mod db;
 pub mod web;
+pub mod requirements;
+pub mod programs;
+pub mod checklists;
+mod pgtypes;

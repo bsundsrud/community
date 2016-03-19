@@ -1,4 +1,4 @@
-use community::finder::requirements::{RequirementModel, Field, Type, Status};
+use community::requirements::{RequirementModel, Field, Type, Status};
 use community::user::UserInfo;
 
 #[test]

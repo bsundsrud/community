@@ -25,8 +25,11 @@ postgres = "0.11"
 postgres_array = "0.6.1"
 dotenv = "0.8.0"
 pgx = { git = "https://github.com/bsundsrud/rust-pgx/" }
+logger = { git = "https://github.com/iron/logger.git" }
 iron = "0.2.6"
 persistent = "0.0.6"
 router = "*"
 mount = "*"
 rustc-serialize = "*"
+log = "0.3"
+env_logger = "0.3"

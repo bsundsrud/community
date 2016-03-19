@@ -1,4 +1,4 @@
-use finder::requirements::Status;
+use requirements::Status;
 
 #[derive(Debug)]
 pub struct ChecklistStatus {
