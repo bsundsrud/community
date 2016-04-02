@@ -21,15 +21,16 @@ path = "tests/test.rs"
 [dependencies]
 r2d2 = "*"
 r2d2_postgres = "*"
-postgres = "0.11"
-postgres_array = "0.6.1"
+postgres = "*"
+postgres_array = { git = "https://github.com/sfackler/rust-postgres-array" }
 dotenv = "0.8.0"
 pgx = { git = "https://github.com/bsundsrud/rust-pgx/" }
-logger = { git = "https://github.com/iron/logger.git" }
-iron = "0.2.6"
-persistent = "0.0.6"
+iron = "*"
+persistent = "*"
 router = "*"
 mount = "*"
 rustc-serialize = "*"
 log = "0.3"
 env_logger = "0.3"
+bodyparser = { git = "https://github.com/iron/body-parser.git" }
+serde_json = "*"

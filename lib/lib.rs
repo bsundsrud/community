@@ -1,4 +1,4 @@
-#![feature(custom_derive)]
+#![feature(custom_derive, question_mark)]
 #[macro_use]
 extern crate log;
 extern crate dotenv;
@@ -11,11 +11,12 @@ extern crate postgres_array;
 extern crate pgx;
 #[macro_use]
 extern crate iron;
-extern crate logger as iron_logger;
 extern crate persistent;
 extern crate mount;
 extern crate router;
 extern crate rustc_serialize;
+extern crate bodyparser;
+extern crate serde_json;
 
 pub mod user;
 pub mod org;

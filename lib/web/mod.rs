@@ -8,7 +8,10 @@ use iron::typemap::Key;
 use persistent::Read;
 use dotenv::dotenv;
 use std::env;
-use iron_logger::Logger;
+use bodyparser;
+#[macro_use]
+mod macros;
+mod orgs;
 
 pub struct AppDb;
 impl Key for AppDb { type Value = PostgresPool; }
@@ -21,6 +24,7 @@ struct StatusResponse {
 fn create_router() -> Router {
     let mut r = Router::new();
     r.get("/status", status_endpoint);
+    r = orgs::register_endpoints(r);
     r
 }
 
@@ -28,9 +32,7 @@ fn create_middleware(r: Router) -> Chain {
     let mut mount = Mount::new();
     mount.mount("/", r);
     let mut chain = Chain::new(mount);
-    let (logger_before, logger_after) = Logger::new(None);
-    chain.link_before(logger_before);
-    chain.link_after(logger_after);
+    chain.link_before(Read::<bodyparser::MaxBodyLength>::one(1024 * 1024 * 10));
     chain
 }
 

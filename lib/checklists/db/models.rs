@@ -38,7 +38,7 @@ impl FromRow for ChecklistRow {
         }
     }
 }
-
+#[derive(Debug)]
 pub struct ChecklistModel {
     pub id: i32,
     pub program_id: i32,
@@ -46,6 +46,7 @@ pub struct ChecklistModel {
     pub hierarchy: ChecklistHierarchy,
 }
 
+#[derive(Debug)]
 pub enum ChecklistHierarchy {
     Or(Vec<ChecklistModel>),
     And(Vec<ChecklistModel>),
